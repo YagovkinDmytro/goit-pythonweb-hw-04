@@ -3,9 +3,13 @@ import argparse
 from pathlib import Path
 from aiopath import AsyncPath
 from aioshutil import copyfile
-from colorama import init, Fore
+import logging.config
+from file_sorting.logging_config import LOGGING_CONFIG
 
-init(autoreset=True)
+
+logging.config.dictConfig(LOGGING_CONFIG)
+logger = logging.getLogger('sorting')
+
 
 async def read_folder(path, new_path, memo=None, indent="  "):
     if memo is None:
@@ -13,10 +17,8 @@ async def read_folder(path, new_path, memo=None, indent="  "):
 
     async for el in path.iterdir():
         if await el.is_dir():
-            print(f"{indent}{Fore.BLUE}📁 {el.name}")
             await read_folder(el, new_path, memo, indent + "  ")
         else:
-            print(f"{indent}{Fore.GREEN}📄 {el.name}")
             file_key = str(await el.resolve())
             if file_key not in memo:
                 memo.add(file_key)
@@ -32,10 +34,11 @@ async def copy_file(current_path, new_path):
     try:
         if not await destination.exists():
             await copyfile(current_path, destination)
+            logger.info(f"Copied: {current_path} -> {destination}")
         else:
-            print(f'The file exists: "{destination}"')
+            logger.info(f'Skipped (already exists): "{destination}"')
     except Exception as e:
-        print(f"Unexpected error while copying: {e}")
+        logger.error(f"Error while copying {current_path}: {e}")
 
 
 async def main():
@@ -51,6 +54,9 @@ async def main():
     output_apath = AsyncPath(f'{output_path}')
     
     await read_folder(source_apath, output_apath)
+    logger.info("Copying completed.")
+    logger.info(f"Source: {args.source}")
+    logger.info(f"Destination: {args.output}")
 
 
 if __name__ == '__main__':
