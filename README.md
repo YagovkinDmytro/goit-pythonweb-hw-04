@@ -4,13 +4,9 @@
 
 An asynchronous Python script for sorting files by their extensions with logging console output.
 
----
-
 ## Description
 
 This script recursively scans a given source directory and copies all found files into a new destination folder, organizing them into subfolders based on their file extensions. It leverages asynchronous file operations (`aiopath`, `aioshutil`) and structured logging.
-
----
 
 ## Features
 
@@ -19,8 +15,6 @@ This script recursively scans a given source directory and copies all found file
 - Logging to multiple outputs:
 - `file_sorting.log` — logs `DEBUG` level messages
 - Console output
-
----
 
 ## Requirements
 
@@ -35,8 +29,6 @@ pip install aiopath aioshutil
 
 ```
 
----
-
 ## Usage
 
 python sorting_files.py <source_folder> <destination_folder>
@@ -44,7 +36,7 @@ python sorting_files.py <source_folder> <destination_folder>
 Example:
 python sorting_files.py "F:\Projects\Downloads" "F:\Projects\SortedFiles"
 
-Project Structure Suggestion
+Project Structure
 
 ```
 project_root/
